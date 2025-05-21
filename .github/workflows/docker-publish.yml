@@ -47,7 +47,9 @@ jobs:
         password: ${{ secrets.SSH_PASSWORD }}
         script: |
           cd ${{ env.REMOTE_DIR }}
-          echo "${{ steps.compose.outputs.compose}}" > docker-compose.yml
+          cat > docker-compose.yml << EOF
+          ${{ steps.compose.outputs.compose}}
+          EOF
           docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           docker compose down
           docker compose up -d
