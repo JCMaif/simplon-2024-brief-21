@@ -29,14 +29,13 @@ jobs:
     needs: build-and-push
 
     steps:
-    - name: Upload docker-compose.yml to server
-      uses: appleboy/scp-action@v0.0.1
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USER }}
-        password: ${{ secrets.SSH_PASSWORD }}
-        source: "docker-compose.yml"
-        target: "${{ env.REMOTE_DIR }}"
+    - id: compose
+      name: Upload docker-compose.yml to server
+      run : |
+        echo "compose<<EOF"  >> $GITHUB_OUTPUT
+        cat "docker-compose.yml" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+        
 
     - name: Deploy via SSH
       uses: appleboy/ssh-action@v1.0.3
@@ -46,6 +45,7 @@ jobs:
         password: ${{ secrets.SSH_PASSWORD }}
         script: |
           cd ${{ env.REMOTE_DIR }}
+          echo "${{ steps.compose.outputs.compose}}" > docker-compose.yml
           docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           docker compose down
           docker compose up -d
