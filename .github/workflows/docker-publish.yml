@@ -1,4 +1,4 @@
-name: CI/CD Rust API
+name: CI/CD docker
 
 on:
   push:
@@ -18,12 +18,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
       
-    - name: Install Rust
-      uses: dtolnay/rust-toolchain@stable
-
-    - name: Build Rust project
-      run: cargo build --release
-
     - name: Build Docker image
       run: docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} .
 
