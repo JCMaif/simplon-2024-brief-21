@@ -34,9 +34,9 @@ jobs:
     - id: compose
       name: Upload docker-compose.yml to server
       run : |
-        echo "compose<<EOF"  >> $GITHUB_OUTPUT
-        cat "docker-compose.yml" >> $GITHUB_OUTPUT
-        echo "EOF" >> $GITHUB_OUTPUT
+        echo 'compose<<EOF' >> $GITHUB_OUTPUT
+        cat docker-compose.yml >> $GITHUB_OUTPUT
+        echo 'EOF' >> $GITHUB_OUTPUT
         
 
     - name: Deploy via SSH
