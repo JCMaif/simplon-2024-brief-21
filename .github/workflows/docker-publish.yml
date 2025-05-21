@@ -31,13 +31,15 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-    - id: compose
-      name: Upload docker-compose.yml to server
-      run : |
-        echo 'compose<<EOF' >> $GITHUB_OUTPUT
-        cat docker-compose.yml >> $GITHUB_OUTPUT
-        echo 'EOF' >> $GITHUB_OUTPUT
-        
+
+    - name: Upload docker-compose.yml via SCP
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        source: "docker-compose.yml"
+        target: "${{ env.REMOTE_DIR }}"
 
     - name: Deploy via SSH
       uses: appleboy/ssh-action@v1.0.3
