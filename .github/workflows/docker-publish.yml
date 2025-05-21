@@ -31,16 +31,7 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-
-    - name: Upload docker-compose.yml via SCP
-      uses: appleboy/scp-action@v0.1.4
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USER }}
-        password: ${{ secrets.SSH_PASSWORD }}
-        source: "docker-compose.yml"
-        target: "${{ env.REMOTE_DIR }}"
-
+        
     - name: Deploy via SSH
       uses: appleboy/ssh-action@v1.0.3
       with:
@@ -49,9 +40,9 @@ jobs:
         password: ${{ secrets.SSH_PASSWORD }}
         script: |
           cd ${{ env.REMOTE_DIR }}
-          cat > docker-compose.yml << EOF
-          ${{ steps.compose.outputs.compose}}
-          EOF
+          echo "Transfert du fichier docker-compose.yml..."
+          scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null docker-compose.yml ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ env.REMOTE_DIR }}/docker-compose.yml
+          echo "Fichier transféré."
           docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           docker compose down
           docker compose up -d
