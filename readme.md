@@ -106,3 +106,23 @@ Dans le server (connecté en ssh) :
 ## Accès à l'application
 
 Dans le navigateur, `https:jaudebert.nocturlab.fr` affiche la page de l'application grâce au reverse proxy traefik.
+
+
+## Bonus : CI/CD Github actions
+
+### Objectif : 
+
+A chaque push sur la branche main, je veux:
+- build l'image rust
+- pusher l'image sur le registry nocturlab
+- me connecter en ssh sur le server
+- copier le docker-compose.yml sur le server
+- pull l'image du registry 
+- lancer le docker compose up 
+
+#### Secrets github à ajouter :
+
+* REGISTRY_URL (`registry.nocturlab.fr/jc1932`)
+* SSH_USER
+* SSH_PASSWORD
+* SSH_HOST (`ssh.shiipou.fr`)
